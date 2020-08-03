@@ -58,7 +58,7 @@ export class UriBuilder {
     this._options = this._clone(defaultBuildOptions);
     this._config = this._clone(defaultConfig);
 
-    this._config.options = []
+    this._config.options = {}
     this._config.replicaSet = []
 
     return this;
@@ -88,13 +88,12 @@ export class UriBuilder {
   }
 
   /**
-   * Sets a connection URI option
+   * Sets connection URI options 
    * 
-   * @param name The option name
-   * @param value The value of the option
+   * @param options An object containing the options to set
    */
-  public static setOption(name: Types.DbOptions, value: Types.Primitive) : typeof UriBuilder {
-    this._config.options?.push({ key:name, value })
+  public static setOptions(options: Types.UriOptionsContract) : typeof UriBuilder {
+    this._config.options = { ...this._config.options, ...this._clone(options) }
 
     return this
   }
@@ -124,7 +123,7 @@ export class UriBuilder {
     this._config.password = password;
 
     if(authSource) {
-      this._config.options?.push({ key: Types.DbOptions.AUTH_SOURCE, value: authSource })
+      this._config.options = { ... this._config.options, authSource }
     }
 
     return this;
@@ -178,7 +177,7 @@ export class UriBuilder {
     }
 
     if(name) {
-      this._config.options?.push({ key: Types.DbOptions.REPLICA_SET_NAME, value: name })
+      this._config.options = { ...this._config.options, replicaSet: name }
     }
 
     return this
@@ -220,7 +219,7 @@ export class UriBuilder {
 
     // Credentials
     if (Utils.hasUserNameOrPassword(this._config)) {
-      uriString += `${encodeURIComponent(this._config.username!)}:${encodeURIComponent(this._config.password!)}@`;
+      uriString += `${encodeURIComponent(this._config.username || '')}:${encodeURIComponent(this._config.password || '')}@`;
     }
 
     // Host
@@ -241,14 +240,25 @@ export class UriBuilder {
     }
 
     // Options
-    if (this._config.options && this._config.options.length > 0) {
-      uriString += Utils.isNullOrEmpty(this._config.database) ? '/?' : '?';
+    if (this._config.options) { 
+      const entries = Object.entries(this._config.options)
+      if(entries.length > 0) {
+        uriString += Utils.isNullOrEmpty(this._config.database) ? '/?' : '?';
 
-        for (const o of this._config.options) {
-          uriString += `${o.key}=${o.value}&`;
-        }
-       
+        entries.forEach(e => {
+          // If the entry has an object value, we need to dig into that
+          const value = e[1]
+          if(typeof value === 'object') {
+            Object.entries(value).forEach(sv => {
+              uriString += `${sv[0]}=${sv[1]}&`
+            })
+          }
+          else
+            uriString += `${e[0]}=${value}&`
+        })
+
         uriString = uriString.slice(0, -1);
+      }       
     }
 
     // Reset the config and options for reuse
@@ -263,9 +273,14 @@ export class UriBuilder {
   public static toJSON(): string {
     return JSON.stringify(
       this._config,
-      (k, v) => Array.isArray(v) && v.every(o => JSON.stringify(o) === '{}')
-        ? undefined
-        : v
+      (k, v) => {
+        if(JSON.stringify(v) === '{}') 
+          return undefined
+        else if (Array.isArray(v) && v.every(o => JSON.stringify(o) === '{}')) 
+          return undefined 
+        else 
+          return v
+      }
     );
   }
 }

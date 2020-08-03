@@ -54,6 +54,9 @@ export const errorMessages = {
   get configObjNotPortNotNumeric () : string {
     return 'The port supplied is not a valid number'
   },
+  get normalizeUnknownOptions () : string {
+    return 'Unrecognized option: '
+  }
 }
 
 export default errorMessages

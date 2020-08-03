@@ -8,6 +8,6 @@ export { parseUri } from './parser'
 
 export { errorMessages } from './errors'
 
-export { normalize } from './normalize'
+export { normalizeUri } from './normalize'
 
 export * from './types'

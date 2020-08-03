@@ -45,7 +45,7 @@ const normalizeHost = (hostObj: { [key: string]: any }) : Types.HostAddress | un
  * 
  * @param configObj The object to normalize to a connection URI configuration object 
  */
-export function normalize (configObj?: { [key: string]: any }) : Types.UriConfigContract {
+export function normalizeUri (configObj?: { [key: string]: any }) : Types.UriConfigContract {
   if(!configObj || Utils.isNullOrUndefined(configObj)){
     throw new Error(errorMessages.configObjNotDefined)
   }
@@ -90,16 +90,135 @@ export function normalize (configObj?: { [key: string]: any }) : Types.UriConfig
 
   // Options
   if(configObj['options']){
-    const optionsObj = configObj['options']
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const result = Object.entries(configObj['options']).map(([k, _]) => {
-      const key = String(k)
-      return { key, value: Utils.parsePrimitive(String(optionsObj[key])) }
+    const options: Types.UriOptionsContract = {}
+    const entries  = Object.entries(configObj['options'])
+    
+    entries.forEach(e => {
+      const key = String(e[0]).toLowerCase()      
+
+      switch(key) {
+        case 'defaultauthdb':
+        case 'authsource':
+          options.authSource = e[1] as string
+          break
+        case 'appname':
+          options.appName = e[1] as string
+          break
+        case 'validateoptions':
+          options.validateOptions = e[1] as boolean 
+          break
+        case 'replicaset':
+          if(!options.readConcern) options.readConcern = {}
+          options.replicaSet = e[1] as string
+          break
+        case 'ssl':
+        case 'tls':
+          if(!options.security) options.security = {}
+          options.security.tls = e[1] as boolean 
+          break
+        case 'tlsinsecure':
+          if(!options.security) options.security = {}
+          options.security.tlsInsecure = e[1] as boolean 
+          break
+        case 'tlsallowinvalidcertificates':
+          if(!options.security) options.security = {}
+          options.security.tlsAllowInvalidCertificates = e[1] as boolean
+          break
+        case 'tlsallowinvalidhostnames':
+          if(!options.security) options.security = {}
+          options.security.tlsAllowInvalidHostnames = e[1] as boolean
+          break
+        case 'tlscafile':
+          if(!options.security) options.security = {}
+          options.security.tlsCAFile = e[1] as string
+          break
+        case 'tlscertificatekeyfile':
+          if(!options.security) options.security = {}
+          options.security.tlsCertificateKeyFile = e[1] as string
+          break
+        case 'tlscertificatekeyfilepassword':
+          if(!options.security) options.security = {}
+          options.security.tlsCertificateKeyFilePassword = e[1] as string
+          break
+        case 'compressors':
+          if(!options.compression) options.compression = {}
+          options.compression.compressors = e[1] as "snappy" | "zlib" | "zstd" | undefined
+          break
+        case 'zlibcompressionlevel':
+          if(!options.compression) options.compression = {}
+          options.compression.zlibCompressionLevel = e[1] as number
+          break
+        case 'autoreconnect':
+          if(!options.connections) options.connections = {}
+          options.connections.autoReconnect = e[1] as boolean
+          break
+        case 'connecttimeoutms':
+          if(!options.connections) options.connections = {}
+          options.connections.connectTimeoutMS = e[1] as number
+          break
+        case 'maxidletimems':
+          if(!options.connections) options.connections = {}
+          options.connections.maxIdleTimeMS = e[1] as number
+          break
+        case 'maxpoolsize':
+          if(!options.connections) options.connections = {}
+          options.connections.maxPoolSize = e[1] as number
+          break
+        case 'minpoolsize':
+          if(!options.connections) options.connections = {}
+          options.connections.minPoolSize = e[1] as number
+          break
+        case 'poolsize':
+          if(!options.connections) options.connections = {}
+          options.connections.poolSize = e[1] as number
+          break
+        case 'reconnectinterval':
+          if(!options.connections) options.connections = {}
+          options.connections.reconnectInterval = e[1] as number
+          break
+        case 'reconnecttries':
+          if(!options.connections) options.connections = {}
+          options.connections.reconnectTries = e[1] as number
+          break
+        case 'waitqueuetimeoutms':
+          if(!options.connections) options.connections = {}
+          options.connections.waitQueueTimeoutMS = e[1] as number
+          break
+        case 'readconcernlevel':
+          if(!options.readConcern) options.readConcern = {}
+          options.readConcern.readConcernLevel = e[1] as "local" | "majority" | "linearizable" | "available" | undefined
+          break
+        case 'readpreference':
+          if(!options.readConcern) options.readConcern = {}
+          options.readConcern.readPreference = e[1] as "primary" | "primaryPreferred" | "secondary" | "secondaryPreferred" | "nearest" | undefined
+          break
+        case 'retryreads':
+          if(!options.readConcern) options.readConcern = {}
+          options.readConcern.retryReads = e[1] as boolean
+          break
+        case 'j':
+        case 'journal':
+          if(!options.writeConcerns) options.writeConcerns = {}
+          options.writeConcerns.journal = e[1] as boolean | undefined
+          break
+        case 'w':
+          if(!options.writeConcerns) options.writeConcerns = {}
+          options.writeConcerns.w = e[1] as string | number | undefined
+          break
+        case 'wtimeoutms':
+          if(!options.writeConcerns) options.writeConcerns = {}
+          options.writeConcerns.wtimeoutMS = e[1] as number | undefined
+          break
+        case 'retrywrites':
+          if(!options.writeConcerns) options.writeConcerns = {}
+          options.writeConcerns.retryWrites = e[1] as boolean
+          break
+        default:
+          throw new Error(errorMessages.normalizeUnknownOptions + e[0])
+      }
     })
 
-    if(result){
-      config.options = result
-    }
+    config.options = options;
   }
 
   /**
@@ -107,8 +226,7 @@ export function normalize (configObj?: { [key: string]: any }) : Types.UriConfig
    */
   ConfigValidator(config, true)
 
-
   return config
 }
 
-export default normalize
+export default normalizeUri

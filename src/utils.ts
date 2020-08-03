@@ -70,12 +70,8 @@ export const parsePrimitive = (value: string) : Types.Primitive => {
   }
 
   // Booleans
-  switch(value.toLocaleLowerCase()) {
-    case 'true':
-      return true
-    case 'false':
-      return false
-  }
+  const bool = parseBoolean(value)
+  if(bool) return bool
 
   // Numbers
   if(V.isNumeric(value)) {
@@ -88,4 +84,22 @@ export const parsePrimitive = (value: string) : Types.Primitive => {
 
 export const hasUserNameOrPassword = (config: Types.UriConfigContract) : boolean => {
   return !isNullOrEmpty(config.username) || !isNullOrEmpty(config.password)
+}
+
+/**
+ * Tries to parse a string as a boolean value
+ * 
+ * @param value the value to parse as a boolean
+ */
+export const parseBoolean = (value: string) : boolean | undefined => {
+  if(!value) return undefined
+
+  switch(value.toLocaleLowerCase()) {
+    case 'true':
+      return true
+    case 'false':
+      return false
+    default:
+      return undefined
+  }
 }

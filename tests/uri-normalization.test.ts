@@ -1,4 +1,4 @@
-import { normalize, errorMessages } from '../src/index'
+import { normalizeUri, errorMessages } from '../src/index'
 
 const connection = {
   protocol: 'mongodb',
@@ -36,17 +36,39 @@ const connection = {
     // minPoolSize: ('POOL_MIN_SIZE', ''),
     // maxIdleTimeMS: ('POOL_MAX_IDLE_TIME_MS', ''),
     // other options
-  },
+    // tlsCertificateKeyFile: '',
+    // tlsCertificateKeyFilePassword: '',
+    // tlsCAFile: '',
+    // tlsAllowInvalidCertificates: '',
+    // tlsAllowInvalidHostnames: '',
+    tlsInsecure: true,
+    // connectTimeoutMS: '',
+    // socketTimeoutMS: '',
+    // compressors: '',
+    // zlibCompressionLevel: '',
+    // maxPoolSize: '',
+    // minPoolSize: '',
+    // maxIdleTimeMS: '',
+    // waitQueueMultiple: '',
+    // waitQueueTimeoutMS: '',
+    // w: '',
+    // wtimeoutMS: '',
+    // journal: '',
+    // readConcernLevel: '',
+    // readPreference: '',
+    // retryReads: '',
+    // retryWrites: '',
+  }
 }
 
 describe('normalize an object into a connection configuration contract', ()=>{
   test('that it throws when no config option has been passed',() => {
-    expect(() => normalize(undefined)).toThrowError(errorMessages.configObjNotDefined)
+    expect(() => normalizeUri(undefined)).toThrowError(errorMessages.configObjNotDefined)
   })
 
   test('that it normalizes an object with basic user, password, and database to normalize to a valid connection URI',
     () => {
-      const config = normalize(connection)
+      const config = normalizeUri(connection)
       expect(config).not.toBeNull()
       expect(config.username).toEqual('admin')
       expect(config.password).toEqual('Password')
@@ -60,31 +82,28 @@ describe('normalize an object into a connection configuration contract', ()=>{
   )
 
   test('that it normalizes an object with options to a valid connection URI',() => {
-    const config = normalize(connection)
+    const config = normalizeUri(connection)
     expect(config).not.toBeNull()
     expect(config.options).not.toBeUndefined()
-    expect(config.options).toHaveLength(2)
-    expect(config.options![0]).not.toBeNull()
-    expect(config.options![0].key).toEqual('ssl')
-    expect(config.options![0].value).toEqual(true)
-    expect(config.options![1]).not.toBeNull()
-    expect(config.options![1].key).toEqual('authSource')
-    expect(config.options![1].value).toEqual('admin')
+    expect(config.options).not.toBeNull()
+    expect(config.options?.security?.tls).toEqual(true)
+    expect(config.options?.security?.tlsInsecure).toEqual(true)
+    expect(config.options?.authSource).toEqual('admin')
   })
 
   test('that it normalizes an object with a replica set to a valid connection URI',() => {
-    const config = normalize(connection)
+    const config = normalizeUri(connection)
     expect(config).not.toBeNull()
     expect(config.replicaSet).not.toBeUndefined()
     expect(config.replicaSet).toHaveLength(3)
-    expect(config.replicaSet![0]).not.toBeNull()
-    expect(config.replicaSet![0].name).toEqual('db0.example.com')
-    expect(config.replicaSet![0].port).toEqual(27017)
-    expect(config.replicaSet![1]).not.toBeNull()
-    expect(config.replicaSet![1].name).toEqual('db1.example.com')
-    expect(config.replicaSet![1].port).toEqual(27018)
-    expect(config.replicaSet![2]).not.toBeNull()
-    expect(config.replicaSet![2].name).toEqual('db2.example.com')
-    expect(config.replicaSet![2].port).toEqual(27019)
+    expect(config.replicaSet?.[0]).not.toBeNull()
+    expect(config.replicaSet?.[0].name).toEqual('db0.example.com')
+    expect(config.replicaSet?.[0].port).toEqual(27017)
+    expect(config.replicaSet?.[1]).not.toBeNull()
+    expect(config.replicaSet?.[1].name).toEqual('db1.example.com')
+    expect(config.replicaSet?.[1].port).toEqual(27018)
+    expect(config.replicaSet?.[2]).not.toBeNull()
+    expect(config.replicaSet?.[2].name).toEqual('db2.example.com')
+    expect(config.replicaSet?.[2].port).toEqual(27019)
   })
 })

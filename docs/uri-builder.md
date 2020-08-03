@@ -63,11 +63,19 @@ var connectionUri = UriBuilder
 
 ### Setting values
 
+TODO: Complete documentation
+
 ## Initializing from a URI Configuration object
+
+TODO: Complete documentation
 
 ## Initializing by normalizing from a plain object
 
+TODO: Complete documentation
+
 ## Exporting
+
+TODO: Complete documentation
 
 `buildUri()`
 

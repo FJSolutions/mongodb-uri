@@ -37,11 +37,17 @@ var connectionUri = UriBuilder
 
 A function that parses a URI connection string and returns a `UriConfigContract`
 
+TODO: Complete documentation
+
 ## URI Configuration
 
 This is the interface for the connection URI configuration 
+
+TODO: Complete documentation
 
 ## Normalize Configuration
 
 It is possible to take an object that has a similar shape to `UriConfigContract` and 'normalize' it. 
 This us useful for flatter configurations and config objects that have an object of options.
+
+TODO: Complete documentation

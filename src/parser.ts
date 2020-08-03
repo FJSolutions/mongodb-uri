@@ -49,15 +49,10 @@ const parseCredentials = (connectionUri: string) : {
  *
  * @param connectionUri The remains of the MongoDB connection URI
  */
-const parseDbAndOptions = (connectionString: string) : {
-  database: string | undefined,
-  options: Array<Types.KeyPrimitive>,
-  tail: string
-} => {
+const parseDbAndOptions = (connectionString: string) : { database: string | undefined, options: Types.UriOptionsContract, tail: string} => {
+  const options: Types.UriOptionsContract = {}
   let database: string | undefined
-  const options: Array<Types.KeyPrimitive> = []
-
-  const [tail, uriPath] = connectionString.split('/')
+  const [head, uriPath] = connectionString.split('/')
 
   if(uriPath){
     const [db, optionsString] = uriPath.split('?')
@@ -67,13 +62,140 @@ const parseDbAndOptions = (connectionString: string) : {
       const arrayPairs = optionsString.split('&')
       for(const o of arrayPairs) {
         const kvp = o.split('=')
-        const value = Utils.parsePrimitive(kvp[1])
-        options.push({ key: kvp[0], value })
+        
+        const key = String(kvp[0]).toLowerCase()
+
+        switch(key) {
+          case 'defaultauthdb':
+          case 'authdb':
+          case 'authsource':
+            options.authSource = decodeURIComponent(kvp[1])
+            break
+          case 'appname':
+            options.appName = decodeURIComponent(kvp[1])
+            break
+          case 'validateoptions':
+            options.validateOptions = Utils.parseBoolean(kvp[1])
+            break
+          case 'replicaset':
+            if(!options.readConcern) options.readConcern = {}
+            options.replicaSet = decodeURIComponent(kvp[1])
+            break
+          case 'ssl':
+          case 'tls':
+            if(!options.security) options.security = {}
+            options.security.tls = Utils.parseBoolean(kvp[1])
+            break
+          case 'tlsinsecure':
+            if(!options.security) options.security = {}
+            options.security.tlsInsecure = Utils.parseBoolean(kvp[1])
+            break
+          case 'tlsallowinvalidcertificates':
+            if(!options.security) options.security = {}
+            options.security.tlsAllowInvalidCertificates = Utils.parseBoolean(kvp[1])
+            break
+          case 'tlsallowinvalidhostnames':
+            if(!options.security) options.security = {}
+            options.security.tlsAllowInvalidHostnames = Utils.parseBoolean(kvp[1])
+            break
+          case 'tlscafile':
+            if(!options.security) options.security = {}
+            options.security.tlsCAFile = decodeURIComponent(kvp[1])
+            break
+          case 'tlscertificatekeyfile':
+            if(!options.security) options.security = {}
+            options.security.tlsCertificateKeyFile = decodeURIComponent(kvp[1])
+            break
+          case 'tlscertificatekeyfilepassword':
+            if(!options.security) options.security = {}
+            options.security.tlsCertificateKeyFilePassword = decodeURIComponent(kvp[1])
+            break
+          case 'compressors':
+            if(!options.compression) options.compression = {}
+            options.compression.compressors = kvp[1] as "snappy" | "zlib" | "zstd" | undefined
+            break
+          case 'zlibcompressionlevel':
+            if(!options.compression) options.compression = {}
+            options.compression.zlibCompressionLevel = parseInt(kvp[1], 10)
+            break
+          case 'autoreconnect':
+            if(!options.connections) options.connections = {}
+            options.connections.autoReconnect = Utils.parseBoolean(kvp[1])
+            break
+          case 'connecttimeoutms':
+            if(!options.connections) options.connections = {}
+            options.connections.connectTimeoutMS = parseInt(kvp[1], 10)
+            break
+          case 'maxidletimems':
+            if(!options.connections) options.connections = {}
+            options.connections.maxIdleTimeMS = parseInt(kvp[1], 10)
+            break
+          case 'maxpoolsize':
+            if(!options.connections) options.connections = {}
+            options.connections.maxPoolSize = parseInt(kvp[1], 10)
+            break
+          case 'minpoolsize':
+            if(!options.connections) options.connections = {}
+            options.connections.minPoolSize = parseInt(kvp[1], 10)
+            break
+          case 'poolsize':
+            if(!options.connections) options.connections = {}
+            options.connections.poolSize = parseInt(kvp[1], 10)
+            break
+          case 'reconnectinterval':
+            if(!options.connections) options.connections = {}
+            options.connections.reconnectInterval = parseInt(kvp[1], 10)
+            break
+          case 'reconnecttries':
+            if(!options.connections) options.connections = {}
+            options.connections.reconnectTries = parseInt(kvp[1], 10)
+            break
+          case 'waitqueuetimeoutms':
+            if(!options.connections) options.connections = {}
+            options.connections.waitQueueTimeoutMS = parseInt(kvp[1], 10)
+            break
+          case 'readconcernlevel':
+            if(!options.readConcern) options.readConcern = {}
+            options.readConcern.readConcernLevel = kvp[1] as "local" | "majority" | "linearizable" | "available" | undefined
+            break
+          case 'readpreference':
+            if(!options.readConcern) options.readConcern = {}
+            options.readConcern.readPreference = kvp[1] as "primary" | "primaryPreferred" | "secondary" | "secondaryPreferred" | "nearest" | undefined
+            break
+          case 'retryreads':
+            if(!options.readConcern) options.readConcern = {}
+            options.readConcern.retryReads = Utils.parseBoolean(kvp[1])
+            break
+          case 'j':
+          case 'journal':
+            if(!options.writeConcerns) options.writeConcerns = {}
+            options.writeConcerns.journal = Utils.parseBoolean(kvp[1])
+            break
+          case 'w':
+            if(!V.isBlank(kvp[1])) {
+              if(!options.writeConcerns) options.writeConcerns = {}
+              if(V.isNumeric(kvp[1]))
+                options.writeConcerns.w = parseInt(kvp[1], 10)
+              else
+                options.writeConcerns.w = decodeURIComponent(kvp[1])
+            }
+            break
+          case 'wtimeoutms':
+            if(!options.writeConcerns) options.writeConcerns = {}
+            options.writeConcerns.wtimeoutMS = parseInt(kvp[1], 10)
+            break
+          case 'retrywrites':
+            if(!options.writeConcerns) options.writeConcerns = {}
+            options.writeConcerns.retryWrites = Utils.parseBoolean(kvp[1])
+            break
+          default:
+            throw new Error(errorMessages.normalizeUnknownOptions + kvp[0])
+        }
       }
     }
   }
 
-  return { database, options, tail }
+  return { database, options, tail: head }
 }
 
 /**
