@@ -4,7 +4,9 @@ const connection = {
   protocol: 'mongodb',
   host: 'localhost',
   port: '27017',
-  username: 'admin',
+  // username: 'admin',
+  user: 'admin',
+  // uid: 'admin',
   password: 'Password',
   database: 'adonis',
   replicaSet: [
@@ -13,12 +15,13 @@ const connection = {
       port: '27017',
     },
     {
-      host: 'db1.example.com',
+      name: 'db1.example.com',
       port: '27018',
     },
+    'db2.example.com:27019',
     {
-      host:  'db2.example.com',
-      port: '27019',
+      address: 'db3.example.com',
+      port: '27020',
     },
   ],
   options: {
@@ -95,7 +98,7 @@ describe('normalize an object into a connection configuration contract', ()=>{
     const config = normalizeUri(connection)
     expect(config).not.toBeNull()
     expect(config.replicaSet).not.toBeUndefined()
-    expect(config.replicaSet).toHaveLength(3)
+    expect(config.replicaSet).toHaveLength(4)
     expect(config.replicaSet?.[0]).not.toBeNull()
     expect(config.replicaSet?.[0].name).toEqual('db0.example.com')
     expect(config.replicaSet?.[0].port).toEqual(27017)
@@ -105,5 +108,8 @@ describe('normalize an object into a connection configuration contract', ()=>{
     expect(config.replicaSet?.[2]).not.toBeNull()
     expect(config.replicaSet?.[2].name).toEqual('db2.example.com')
     expect(config.replicaSet?.[2].port).toEqual(27019)
+    expect(config.replicaSet?.[3]).not.toBeNull()
+    expect(config.replicaSet?.[3].name).toEqual('db3.example.com')
+    expect(config.replicaSet?.[3].port).toEqual(27020)
   })
 })

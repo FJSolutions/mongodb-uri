@@ -63,6 +63,34 @@ var connectionUri = UriBuilder
 
 ### Setting values
 
+*N.B.* All of the `set` methods on the `UriBuilder` return the builder and so provide a fluid API for chaining method calls before outputting a result.
+
+Settings for outputting configuration details can be set by passing a `BuilderOptionsContract` object
+
+```js
+const connectionUri = UriBuilder
+    .setBuilderOptions({ alwaysShowPort: true })
+    .buildUri()     // 'mongodb://localhost:27017')
+```
+
+Currently the only option on this object is whether to always show the default port of 27017 in the URI connection string (the default is false)
+
+* `setOptions(options: Types.UriOptionsContract)`
+* `setCredentials(userName: string, password: string, authSource?: string)`
+* `setHost(host: string | Types.HostAddress)`
+* `setReplicaSet(replicaSet: Array<string | Types.HostAddress>, name?: string)`
+* `setOptions(options: Types.UriOptionsContract)`
+
+TODO: Complete documentation
+
+## Output
+
+* `buildUri()`
+* `toJSON()`
+* `exportConfig()`
+
+*N.B.* It is important to realize that after calling `buildUri()` the config of the builder is reset to it's default values.
+
 TODO: Complete documentation
 
 ## Initializing from a URI Configuration object
@@ -72,13 +100,3 @@ TODO: Complete documentation
 ## Initializing by normalizing from a plain object
 
 TODO: Complete documentation
-
-## Exporting
-
-TODO: Complete documentation
-
-`buildUri()`
-
-`toJSON()`
-
-`exportConfig()`

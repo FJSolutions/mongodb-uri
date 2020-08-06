@@ -46,9 +46,9 @@ describe('Test building MongoDB connection URIs', () => {
   })
 
   test('an overridden config object with escaped username and password creates a valid URI', () => {
-    const config: UriConfigContract = { username: 'francis@fjsolutions.co.za', password: 'P@ssw/0r%d@' }
+    const config: UriConfigContract = { username: 'fjudge7@gmail.com', password: 'P@ssw/0r%d@' }
     const connectionUri = UriBuilder.setConfig(config).buildUri()
-    expect(connectionUri).toEqual('mongodb://francis%40fjsolutions.co.za:P%40ssw%2F0r%25d%40@localhost')
+    expect(connectionUri).toEqual('mongodb://fjudge7%40gmail.com:P%40ssw%2F0r%25d%40@localhost')
   })
 
   test('an overridden config object with a single option creates a valid URI', () => {

@@ -21,6 +21,9 @@ export const errorMessages = {
   get hostInvalid () : string {
     return 'The MongoDb host information was invalid'
   },
+  get hostInvalidAddress () : string {
+    return 'The MongoDb host address was not supplied!'
+  },
   get hostPortNotANumber () : string {
     return 'The supplied value for the Port isn\'t a valid number'
   },

@@ -203,7 +203,7 @@ const parseDbAndOptions = (connectionString: string) : { database: string | unde
  *
  * @param connectionUri The remains of the MongoDB connection URI
  */
-const parseHosts = (connectionUri: string) : { isSingle: boolean, hosts: Array<Types.HostAddress>} => {
+export const parseHosts = (connectionUri: string) : { isSingle: boolean, hosts: Array<Types.HostAddress>} => {
   if(Utils.isNullOrEmpty(connectionUri)) {
     throw new Error(errorMessages.hostNotDefined)
   }

@@ -20,7 +20,7 @@ module.exports = {
     'brace-style': ['error', 'stroustrup'],
     'object-curly-spacing': ['error', 'always'],
     'max-len': 'off',
-    'no-non-null-assertion': 0,
-    'no-explicit-any': 0,
+    'no-non-null-assertion': 'off',
+    'no-explicit-any': 'off',
   },
 };

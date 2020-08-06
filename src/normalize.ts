@@ -10,34 +10,48 @@ import * as Utils from './utils'
 import errorMessages from './errors'
 import ConfigValidator from './validation'
 import { defaultConfig } from './builder'
+import { parseHosts } from './parser'
 
-const normalizeHost = (hostObj: { [key: string]: any }) : Types.HostAddress | undefined => {
-  if(!hostObj){
+const normalizeHost = (hostObj: { [key: string]: any } | string) : Types.HostAddress | undefined => {
+  if(!hostObj) {
     return undefined
   }
 
-  const host: Types.HostAddress = { name: Types.MONGO_DB_HOST, port: Types.MONGO_DB_PORT }
-
-  if(Utils.isNullOrEmpty(hostObj['host'])){
-    return host
+  
+  // Host string
+  if(typeof hostObj === 'string'){
+    const hosts = parseHosts(hostObj as string)
+    return hosts.hosts[0]
   }
-  else{
-    host.name = hostObj['host']
-  }
+  else {
+    const host: Types.HostAddress = { name: Types.MONGO_DB_HOST, port: Types.MONGO_DB_PORT }
 
-  // Host port
-  if(!Utils.isNullOrEmpty(hostObj['port'])){
-    const portString = hostObj['port']
-    if(V.isNumeric(portString)){
-      host.port = parseInt(portString, 10)
+    // The host name can be either 'host', 'name', or 'address'
+    const hostName = hostObj['host'] || hostObj['name'] || hostObj['address']
+    
+    // Validate the host name
+    if(!Utils.isNullOrEmpty(hostName)) {
+    //   console.log(hostObj);
+    //   throw new Error(errorMessages.hostInvalidAddress)
+    // }
+    // else {
+      host.name = hostName
+    }
 
-      if(isNaN(host.port)){
-        throw new Error(errorMessages.configObjNotPortNotNumeric)
+    // Host port
+    if(!Utils.isNullOrEmpty(hostObj['port'])){
+      const portString = hostObj['port']
+      if(V.isNumeric(portString)){
+        host.port = parseInt(portString, 10)
+
+        if(isNaN(host.port)){
+          throw new Error(errorMessages.configObjNotPortNotNumeric)
+        }
       }
     }
-  }
 
-  return host
+    return host
+  }
 }
 
 /**
@@ -58,14 +72,22 @@ export function normalizeUri (configObj?: { [key: string]: any }) : Types.UriCon
   }
 
   // Host name
-  const host = normalizeHost({ host: configObj['host'], port: configObj['port'] })
-  if(host){
-    config.host = host
+  if(configObj['host']){
+    const host = normalizeHost({ host: configObj['host'], port: configObj['port'] })
+    if(host){
+      config.host = host
+    }
   }
 
   // User name
   if(configObj['username']){
     config.username = configObj['username']
+  }
+  else if(configObj['user']){
+    config.username = configObj['user']
+  }
+  else if(configObj['uid']){
+    config.username = configObj['uid']
   }
 
   // User password
@@ -80,11 +102,20 @@ export function normalizeUri (configObj?: { [key: string]: any }) : Types.UriCon
 
   // Replica Set
   if(Array.isArray(configObj['replicaSet'])){
-    const result = (configObj['replicaSet'] as { host: string, port: string | number }[])
-      .map(item => normalizeHost({ host: item.host, port: item.port }))      
+    const replicaSet = configObj['replicaSet']
+    config.replicaSet = []
+    replicaSet.forEach(entry => {
+      const host = normalizeHost(entry)
+      if(host){
+        config.replicaSet?.push(host)
+      }
+    })
 
-    if(result.length > 0) {
-      config.replicaSet = result as Types.HostAddress[]
+    // const result = (configObj['replicaSet'] as { host: string, port: string | number }[])
+    //   .map(item => normalizeHost({ host: item.host, port: item.port }))      
+
+    if(config.replicaSet.length === 0) {
+      config.replicaSet = undefined
     }
   }
 
@@ -221,9 +252,7 @@ export function normalizeUri (configObj?: { [key: string]: any }) : Types.UriCon
     config.options = options;
   }
 
-  /**
-   * Validate the configuration object
-   */
+  // Validate the configuration object
   ConfigValidator(config, true)
 
   return config
