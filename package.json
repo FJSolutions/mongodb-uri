@@ -1,7 +1,7 @@
 {
   "name": "@fjsolutions/mongodb-uri",
   "version": "1.0.0",
-  "description": "A TypeScript project for creating, loading, and validating configuration information to parse and generate MongoDB URI connection strings.",
+  "description": "A TypeScript module for creating, loading, and validating URI configuration information and then generating MongoDB URI connection strings.",
   "main": "dist/index.js",
   "scripts": {
     "test": "cls && jest --coverage --watch",
@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/FJSolutions/mongodb-uri.git"
   },
-  "author": "",
+  "author": "Francis Judge",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/FJSolutions/mongodb-uri/issues"
