@@ -1,0 +1,22 @@
+export declare const errorMessages: {
+    readonly emptyUriString: string;
+    readonly protocolNotDefined: string;
+    readonly protocolUnrecognized: string;
+    readonly hostNotDefined: string;
+    readonly hostMissing: string;
+    readonly hostInvalid: string;
+    readonly hostInvalidAddress: string;
+    readonly hostPortNotANumber: string;
+    readonly configNotSupplied: string;
+    readonly configHasNoName: string;
+    readonly configHasNoHost: string;
+    readonly configHasNoHostName: string;
+    readonly configHasNoHostPort: string;
+    readonly configHasNoProtocol: string;
+    readonly configHasUnknownProtocol: string;
+    readonly configMustHaveBothUserAndPassword: string;
+    readonly configObjNotDefined: string;
+    readonly configObjNotPortNotNumeric: string;
+    readonly normalizeUnknownOptions: string;
+};
+export default errorMessages;

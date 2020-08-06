@@ -1,3 +1,9 @@
+.vscode/**
+node_modules/**
 src/**
 tests/**
 coverage/**
+.eslintignore
+.eslintrc.js
+jest.config.js
+tsconfig.json
