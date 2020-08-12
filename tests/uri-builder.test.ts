@@ -52,19 +52,19 @@ describe('Test building MongoDB connection URIs', () => {
   })
 
   test('an overridden config object with a single option creates a valid URI', () => {
-    const config: UriConfigContract = { options: { security: { tls: true } } } 
+    const config: UriConfigContract = { options: { encryption: { tls: true } } } 
     const connectionUri = UriBuilder.setConfig(config).buildUri()
     expect(connectionUri).toEqual('mongodb://localhost/?tls=true')
   })
 
   test('an overridden config object with a database name and single option creates a valid URI', () => {
-    const config: UriConfigContract = { database: 'example', options: { appName:'mongodb-uri', security: { tls: true } } }
+    const config: UriConfigContract = { database: 'example', options: { appName:'mongodb-uri', encryption: { tls: true } } }
     const connectionUri = UriBuilder.setConfig(config).buildUri()
     expect(connectionUri).toEqual('mongodb://localhost/example?appName=mongodb-uri&tls=true')
   })
 
   test('an overridden config object with two options creates a valid URI', () => {
-    const config: UriConfigContract = { options: { authSource: 'admin', security: { tls: true } } }
+    const config: UriConfigContract = { options: { authSource: 'admin', encryption: { tls: true } } }
     const connectionUri = UriBuilder.setConfig(config).buildUri()
     expect(connectionUri).toEqual('mongodb://localhost/?authSource=admin&tls=true')
   })

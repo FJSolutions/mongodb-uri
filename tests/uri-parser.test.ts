@@ -126,6 +126,6 @@ describe('MongoDB Connection Builder parsing', ()=>{
     expect(config.options?.replicaSet).toEqual('VentureChurchCluster1-shard-0')
     expect(config.options?.readConcern?.readPreference).toEqual('primary')
     expect(config.options?.appName).toEqual('MongoDB Compass')
-    expect(config.options?.security?.tls).toEqual(true)
+    expect(config.options?.encryption?.tls).toEqual(true)
   })
 })

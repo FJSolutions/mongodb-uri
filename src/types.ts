@@ -133,9 +133,9 @@ export interface UriOptionsContract {
     reconnectInterval?: number,
   },
   /**
-   * An object containing security related options
+   * An object containing encryption related options
    */
-  security?: {
+  encryption?: {
     /**
      * Enables or disables TLS/SSL for the connection
      * (The tls option is equivalent to the ssl option)

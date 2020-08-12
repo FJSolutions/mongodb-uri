@@ -89,8 +89,8 @@ describe('normalize an object into a connection configuration contract', ()=>{
     expect(config).not.toBeNull()
     expect(config.options).not.toBeUndefined()
     expect(config.options).not.toBeNull()
-    expect(config.options?.security?.tls).toEqual(true)
-    expect(config.options?.security?.tlsInsecure).toEqual(true)
+    expect(config.options?.encryption?.tls).toEqual(true)
+    expect(config.options?.encryption?.tlsInsecure).toEqual(true)
     expect(config.options?.authSource).toEqual('admin')
   })
 
