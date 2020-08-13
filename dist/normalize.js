@@ -123,39 +123,39 @@ function normalizeUri(configObj) {
                     break;
                 case 'ssl':
                 case 'tls':
-                    if (!options.security)
-                        options.security = {};
-                    options.security.tls = e[1];
+                    if (!options.encryption)
+                        options.encryption = {};
+                    options.encryption.tls = e[1];
                     break;
                 case 'tlsinsecure':
-                    if (!options.security)
-                        options.security = {};
-                    options.security.tlsInsecure = e[1];
+                    if (!options.encryption)
+                        options.encryption = {};
+                    options.encryption.tlsInsecure = e[1];
                     break;
                 case 'tlsallowinvalidcertificates':
-                    if (!options.security)
-                        options.security = {};
-                    options.security.tlsAllowInvalidCertificates = e[1];
+                    if (!options.encryption)
+                        options.encryption = {};
+                    options.encryption.tlsAllowInvalidCertificates = e[1];
                     break;
                 case 'tlsallowinvalidhostnames':
-                    if (!options.security)
-                        options.security = {};
-                    options.security.tlsAllowInvalidHostnames = e[1];
+                    if (!options.encryption)
+                        options.encryption = {};
+                    options.encryption.tlsAllowInvalidHostnames = e[1];
                     break;
                 case 'tlscafile':
-                    if (!options.security)
-                        options.security = {};
-                    options.security.tlsCAFile = e[1];
+                    if (!options.encryption)
+                        options.encryption = {};
+                    options.encryption.tlsCAFile = e[1];
                     break;
                 case 'tlscertificatekeyfile':
-                    if (!options.security)
-                        options.security = {};
-                    options.security.tlsCertificateKeyFile = e[1];
+                    if (!options.encryption)
+                        options.encryption = {};
+                    options.encryption.tlsCertificateKeyFile = e[1];
                     break;
                 case 'tlscertificatekeyfilepassword':
-                    if (!options.security)
-                        options.security = {};
-                    options.security.tlsCertificateKeyFilePassword = e[1];
+                    if (!options.encryption)
+                        options.encryption = {};
+                    options.encryption.tlsCertificateKeyFilePassword = e[1];
                     break;
                 case 'compressors':
                     if (!options.compression)

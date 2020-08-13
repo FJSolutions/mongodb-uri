@@ -77,39 +77,39 @@ const parseDbAndOptions = (connectionString) => {
                         break;
                     case 'ssl':
                     case 'tls':
-                        if (!options.security)
-                            options.security = {};
-                        options.security.tls = Utils.parseBoolean(kvp[1]);
+                        if (!options.encryption)
+                            options.encryption = {};
+                        options.encryption.tls = Utils.parseBoolean(kvp[1]);
                         break;
                     case 'tlsinsecure':
-                        if (!options.security)
-                            options.security = {};
-                        options.security.tlsInsecure = Utils.parseBoolean(kvp[1]);
+                        if (!options.encryption)
+                            options.encryption = {};
+                        options.encryption.tlsInsecure = Utils.parseBoolean(kvp[1]);
                         break;
                     case 'tlsallowinvalidcertificates':
-                        if (!options.security)
-                            options.security = {};
-                        options.security.tlsAllowInvalidCertificates = Utils.parseBoolean(kvp[1]);
+                        if (!options.encryption)
+                            options.encryption = {};
+                        options.encryption.tlsAllowInvalidCertificates = Utils.parseBoolean(kvp[1]);
                         break;
                     case 'tlsallowinvalidhostnames':
-                        if (!options.security)
-                            options.security = {};
-                        options.security.tlsAllowInvalidHostnames = Utils.parseBoolean(kvp[1]);
+                        if (!options.encryption)
+                            options.encryption = {};
+                        options.encryption.tlsAllowInvalidHostnames = Utils.parseBoolean(kvp[1]);
                         break;
                     case 'tlscafile':
-                        if (!options.security)
-                            options.security = {};
-                        options.security.tlsCAFile = decodeURIComponent(kvp[1]);
+                        if (!options.encryption)
+                            options.encryption = {};
+                        options.encryption.tlsCAFile = decodeURIComponent(kvp[1]);
                         break;
                     case 'tlscertificatekeyfile':
-                        if (!options.security)
-                            options.security = {};
-                        options.security.tlsCertificateKeyFile = decodeURIComponent(kvp[1]);
+                        if (!options.encryption)
+                            options.encryption = {};
+                        options.encryption.tlsCertificateKeyFile = decodeURIComponent(kvp[1]);
                         break;
                     case 'tlscertificatekeyfilepassword':
-                        if (!options.security)
-                            options.security = {};
-                        options.security.tlsCertificateKeyFilePassword = decodeURIComponent(kvp[1]);
+                        if (!options.encryption)
+                            options.encryption = {};
+                        options.encryption.tlsCertificateKeyFilePassword = decodeURIComponent(kvp[1]);
                         break;
                     case 'compressors':
                         if (!options.compression)

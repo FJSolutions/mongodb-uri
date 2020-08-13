@@ -38,7 +38,7 @@ export interface UriOptionsContract {
         reconnectTries?: number;
         reconnectInterval?: number;
     };
-    security?: {
+    encryption?: {
         tls?: boolean;
         tlsCertificateKeyFile?: string;
         tlsCertificateKeyFilePassword?: string;
