@@ -1,3 +1,4 @@
+import test from 'japa'
 import { normalizeUri, errorMessages } from '../src/index'
 
 const connection = {
@@ -64,52 +65,56 @@ const connection = {
   }
 }
 
-describe('normalize an object into a connection configuration contract', ()=>{
-  test('that it throws when no config option has been passed',() => {
-    expect(() => normalizeUri(undefined)).toThrowError(errorMessages.configObjNotDefined)
+test.group('Normalizes an object into a connection configuration contract', () => {
+
+  test('that it throws when no config option has been passed', assert => {
+    assert.throw(() => normalizeUri(undefined), errorMessages.configObjNotDefined)
   })
 
   test('that it normalizes an object with basic user, password, and database to normalize to a valid connection URI',
-    () => {
+    assert => {
+      assert.plan(9)
       const config = normalizeUri(connection)
-      expect(config).not.toBeNull()
-      expect(config.username).toEqual('admin')
-      expect(config.password).toEqual('Password')
-      expect(config.database).toEqual('adonis')
-      expect(config.protocol).toEqual('mongodb')
-      expect(config.name).toEqual('Default')
-      expect(config.host).not.toBeNull()
-      expect(config.host?.name).toEqual('localhost')
-      expect(config.host?.port).toEqual(27017)
+      assert.isNotNull(config)
+      assert.equal(config.username,'admin')
+      assert.equal(config.password, 'Password')
+      assert.equal(config.database,'adonis')
+      assert.equal(config.protocol,'mongodb')
+      assert.equal(config.name,'Default')
+      assert.isNotNull(config.host)
+      assert.equal(config.host?.name,'localhost')
+      assert.equal(config.host?.port,27017)
     }
   )
 
-  test('that it normalizes an object with options to a valid connection URI',() => {
+  test('that it normalizes an object with options to a valid connection URI', assert => {
     const config = normalizeUri(connection)
-    expect(config).not.toBeNull()
-    expect(config.options).not.toBeUndefined()
-    expect(config.options).not.toBeNull()
-    expect(config.options?.encryption?.tls).toEqual(true)
-    expect(config.options?.encryption?.tlsInsecure).toEqual(true)
-    expect(config.options?.authSource).toEqual('admin')
+    assert.plan(6)
+    assert.isNotNull(config)
+    assert.isOk(config.options)
+    assert.isNotNull(config.options)
+    assert.equal(config.options?.encryption?.tls, true)
+    assert.equal(config.options?.encryption?.tlsInsecure, true)
+    assert.equal(config.options?.authSource, 'admin')
   })
 
-  test('that it normalizes an object with a replica set to a valid connection URI',() => {
+  test('that it normalizes an object with a replica set to a valid connection URI',assert => {
     const config = normalizeUri(connection)
-    expect(config).not.toBeNull()
-    expect(config.replicaSet).not.toBeUndefined()
-    expect(config.replicaSet).toHaveLength(4)
-    expect(config.replicaSet?.[0]).not.toBeNull()
-    expect(config.replicaSet?.[0].name).toEqual('db0.example.com')
-    expect(config.replicaSet?.[0].port).toEqual(27017)
-    expect(config.replicaSet?.[1]).not.toBeNull()
-    expect(config.replicaSet?.[1].name).toEqual('db1.example.com')
-    expect(config.replicaSet?.[1].port).toEqual(27018)
-    expect(config.replicaSet?.[2]).not.toBeNull()
-    expect(config.replicaSet?.[2].name).toEqual('db2.example.com')
-    expect(config.replicaSet?.[2].port).toEqual(27019)
-    expect(config.replicaSet?.[3]).not.toBeNull()
-    expect(config.replicaSet?.[3].name).toEqual('db3.example.com')
-    expect(config.replicaSet?.[3].port).toEqual(27020)
+    assert.plan(15)
+    assert.isNotNull(config)
+    assert.isOk(config.replicaSet)
+    assert.equal(config.replicaSet?.length, 4)
+    assert.isOk(config.replicaSet?.[0])
+    assert.equal(config.replicaSet?.[0].name, 'db0.example.com')
+    assert.equal(config.replicaSet?.[0].port, 27017)
+    assert.isOk(config.replicaSet?.[1])
+    assert.equal(config.replicaSet?.[1].name, 'db1.example.com')
+    assert.equal(config.replicaSet?.[1].port, 27018)
+    assert.isOk(config.replicaSet?.[2])
+    assert.equal(config.replicaSet?.[2].name, 'db2.example.com')
+    assert.equal(config.replicaSet?.[2].port, 27019)
+    assert.isOk(config.replicaSet?.[3])
+    assert.equal(config.replicaSet?.[3].name, 'db3.example.com')
+    assert.equal(config.replicaSet?.[3].port, 27020)
   })
 })

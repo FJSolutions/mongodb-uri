@@ -1,131 +1,129 @@
+import test from 'japa'
 import { parseUri, errorMessages } from '../src/index'
 
-describe('MongoDB Connection Builder parsing', ()=>{
+test.group('MongoDB Connection Builder parsing', () => {
   const connectionUri = 'mongodb://uid:pwd@127.0.0.1:27017/example?authDb=admin&connectTimeoutMS=300000'
 
-  test('parsing an empty string throws an error', ()=>{
-    expect(() => parseUri('')).toThrowError(errorMessages.emptyUriString)
+  test('parsing an empty string throws an error', assert => {
+    assert.throws(() => parseUri(''), errorMessages.emptyUriString)
   })
 
-  test('parsing a string which does not start with a protocol throws an error', ()=>{
-    expect(()=>parseUri('francis judge')).toThrowError(errorMessages.protocolNotDefined)
+  test('parsing a string which does not start with a protocol throws an error', assert => {
+    assert.throws(()=>parseUri('francis judge'), errorMessages.protocolNotDefined)
   })
 
-  test('parsing a URI with an unrecognized protocol throws an exception', ()=>{
-    expect(()=> parseUri('http://www.fjsolutions.co.za')).toThrowError(errorMessages.protocolUnrecognized)
+  test('parsing a URI with an unrecognized protocol throws an exception', assert => {
+    assert.throws(()=> parseUri('http://www.fjsolutions.co.za'), errorMessages.protocolUnrecognized)
   })
 
-  test('returns a configuration object when a known "mongodb+srv" protocol is passed', ()=>{
-    expect(parseUri('mongodb+srv://localhost').protocol).toEqual('mongodb+srv')
+  test('returns a configuration object when a known "mongodb+srv" protocol is passed', assert => {
+    assert.equal(parseUri('mongodb+srv://localhost').protocol, 'mongodb+srv')
   })
 
-  test('returns a configuration object when a known "mongodb" protocol is passed', () => {
-    expect(parseUri(connectionUri).protocol).toEqual('mongodb')
+  test('returns a configuration object when a known "mongodb" protocol is passed', assert => {
+    assert.equal(parseUri(connectionUri).protocol, 'mongodb')
   })
 
   test('returns a configuration object with blank user name and password when no user name and ' +
-    'password is supplied', () => {
+    'password is supplied', assert => {
     const config = parseUri('mongodb://localhost:27017')
-    expect(config.username).toBeUndefined()
-    expect(config.password).toBeUndefined()
+    assert.isNotOk(config.username)
+    assert.isNotOk(config.password)
   })
 
-  test('returns a configuration object with user name and password', () => {
+  test('returns a configuration object with user name and password', assert => {
     const config = parseUri('mongodb://Francis:Password@localhost:27017')
-    expect(config.username).toEqual('Francis')
-    expect(config.password).toEqual('Password')
+    assert.equal(config.username, 'Francis')
+    assert.equal(config.password, 'Password')
   })
 
-  test('returns a configuration object with decoded user name and password if escaped' +
-    ' illegal characters', () => {
+  test('returns a configuration object with decoded user name and password if escaped illegal characters', assert => {
     const config = parseUri('mongodb://francis%40fjsolutions.co.za:P%3Ass%25or%2Fd@localhost:27017')
-    expect(config.username).toEqual('francis@fjsolutions.co.za')
-    expect(config.password).toEqual('P:ss%or/d')
+    assert.equal(config.username, 'francis@fjsolutions.co.za')
+    assert.equal(config.password, 'P:ss%or/d')
   })
 
-  test('returns a configuration object with a database when one is set', () => {
+  test('returns a configuration object with a database when one is set', assert => {
     const config = parseUri(connectionUri)
-    expect(config.database).toEqual('example')
+    assert.equal(config.database, 'example')
   })
 
-  test('returns a configuration object with an undefined database when one is not set', () => {
+  test('returns a configuration object with an undefined database when one is not set', assert => {
     const config = parseUri('mongodb://localhost:27017')
-    expect(config.database).toBeUndefined()
+    assert.isNotOk(config.database)
   })
 
-  test('returns a configuration object with an array of two options', () => {
+  test('returns a configuration object with an array of two options', assert => {
     const config = parseUri(connectionUri)
-    expect(Object.getOwnPropertyNames(config.options)).toHaveLength(2)
-    expect(config.options?.authSource).toEqual('admin')
-    expect(config.options?.connections?.connectTimeoutMS).toEqual(300000)
+    assert.lengthOf(Object.getOwnPropertyNames(config.options), 2)
+    assert.equal(config.options?.authSource, 'admin')
+    assert.equal(config.options?.connections?.connectTimeoutMS, 300000)
   })
 
-  test('returns a configuration object with an empty array of options', () => {
+  test('returns a configuration object with an empty array of options', assert => {
     const config = parseUri('mongodb://localhost:27017')
-    expect(config.options).not.toBeNull()
-    expect(config.options).not.toBeUndefined()
-    expect(Object.getOwnPropertyNames(config.options)).toHaveLength(0)
+    assert.isOk(config.options)
+    assert.lengthOf(Object.getOwnPropertyNames(config.options), 0)
   })
 
-  test('returns a configuration object with and array of one option', () => {
+  test('returns a configuration object with and array of one option', assert => {
     const config = parseUri('mongodb://localhost:27017/?authDb=admin')
-    expect(config.options).not.toBeNull()
-    expect(Object.getOwnPropertyNames(config.options)).toHaveLength(1)
-    expect(config.options?.authSource).toEqual('admin')
+    assert.isOk(config.options)
+    assert.lengthOf(Object.getOwnPropertyNames(config.options), 1)
+    assert.equal(config.options?.authSource, 'admin')
   })
 
-  test('returns a configuration object ', () => {
+  test("returns a 'Default' configuration object", assert => {
     const config = parseUri('mongodb://localhost:27017')
-    expect(config.name).toEqual('Default')
+    assert.equal(config.name, 'Default')
   })
 
-  test('throws an error when no host information is supplied', () => {
-    expect(() => parseUri('mongodb://')).toThrowError(errorMessages.hostNotDefined)
+  test('throws an error when no host information is supplied', assert => {
+    assert.throws(() => parseUri('mongodb://'), errorMessages.hostNotDefined)
   })
 
-  test('returns a configuration object for a single host without an explicit port', () => {
+  test('returns a configuration object for a single host without an explicit port', assert => {
     const config = parseUri('mongodb://localhost/?replicaSet=mySet&authSource=authDB')
-    expect(config.replicaSet).toBeUndefined()
-    expect(config.host).not.toBeUndefined()
-    expect(config.host?.name).toEqual('localhost')
-    expect(config.host?.port).toEqual(27017)
+    assert.isNotOk(config.replicaSet)
+    assert.isOk(config.host)
+    assert.equal(config.host?.name, 'localhost')
+    assert.equal(config.host?.port, 27017)
   })
 
-  test('returns a configuration object for a single host with an explicit port', () => {
+  test('returns a configuration object for a single host with an explicit port', assert => {
     const config = parseUri('mongodb://localhost:27018/?replicaSet=mySet&authSource=authDB')
-    expect(config.replicaSet).toBeUndefined()
-    expect(config.host).not.toBeUndefined()
-    expect(config.host?.name).toEqual('localhost')
-    expect(config.host?.port).toEqual(27018)
+    assert.isNotOk(config.replicaSet)
+    assert.isOk(config.host)
+    assert.equal(config.host?.name, 'localhost')
+    assert.equal(config.host?.port, 27018)
   })
 
-  test('returns a configuration object with multiple hosts with mixed explicit ports', () => {
+  test('returns a configuration object with multiple hosts with mixed explicit ports', assert => {
     const config = parseUri('mongodb://mongodb1.example.com:27317,mongodb2.example.com/?replicaSet=mySet&authSource=authDB')
-    expect(config.host).toBeUndefined()
-    expect(config.replicaSet).not.toBeUndefined()
-    expect(config.replicaSet).toHaveLength(2)
-    expect(config.replicaSet?.[0].name).toEqual('mongodb1.example.com')
-    expect(config.replicaSet?.[0].port).toEqual(27317)
-    expect(config.replicaSet?.[1].name).toEqual('mongodb2.example.com')
-    expect(config.replicaSet?.[1].port).toEqual(27017)
+    assert.isNotOk(config.host)
+    assert.isOk(config.replicaSet)
+    assert.equal(config.replicaSet?.length, 2)
+    assert.equal(config.replicaSet?.[0].name, 'mongodb1.example.com')
+    assert.equal(config.replicaSet?.[0].port, 27317)
+    assert.equal(config.replicaSet?.[1].name, 'mongodb2.example.com')
+    assert.equal(config.replicaSet?.[1].port, 27017)
   })
 
-  test('throws an error when a supplied port cannot be converted to an integer', () => {
-    expect(() => (parseUri('mongodb://mongodb2.example.com:abcde')))
-      .toThrowError(errorMessages.hostPortNotANumber)
+  test('throws an error when a supplied port cannot be converted to an integer', assert => {
+    assert.throws(() => parseUri('mongodb://mongodb2.example.com:abcde'), errorMessages.hostPortNotANumber)
   })
 
-  test('returns a configuration object with multiple options set', () => {
+  test('returns a configuration object with multiple options set', assert => {
     const config = parseUri('mongodb+srv://francis:abc123ABC@venturechurchcluster1-grcfa.mongodb.net/test?authSource=admin'+
       '&replicaSet=VentureChurchCluster1-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true')
-    expect(config.host).not.toBeUndefined()
-    expect(config.replicaSet).toBeUndefined()
-    expect(config.options).not.toBeUndefined()
-    expect(Object.getOwnPropertyNames(config.options)).toHaveLength(5)
-    expect(config.options?.authSource).toEqual('admin')
-    expect(config.options?.replicaSet).toEqual('VentureChurchCluster1-shard-0')
-    expect(config.options?.readConcern?.readPreference).toEqual('primary')
-    expect(config.options?.appName).toEqual('MongoDB Compass')
-    expect(config.options?.encryption?.tls).toEqual(true)
+    assert.isOk(config.host)
+    assert.isNotOk(config.replicaSet)
+    assert.isOk(config.options)
+    assert.lengthOf(Object.getOwnPropertyNames(config.options), 5)
+    assert.equal(config.options?.authSource, 'admin')
+    assert.equal(config.options?.replicaSet, 'VentureChurchCluster1-shard-0')
+    assert.equal(config.options?.readConcern?.readPreference, 'primary')
+    assert.equal(config.options?.appName, 'MongoDB Compass')
+    assert.equal(config.options?.encryption?.tls, true)
   })
 })

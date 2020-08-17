@@ -4,7 +4,7 @@
   "description": "A TypeScript module for creating, loading, and validating URI configuration information and then generating MongoDB URI connection strings.",
   "main": "dist/index.js",
   "scripts": {
-    "test": "cls && jest --coverage --watch",
+    "test": "cls && nodemon japaFile.js",
     "build": "tsc"
   },
   "repository": {
@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/FJSolutions/mongodb-uri#readme",
   "devDependencies": {
-    "@types/jest": "^26.0.8",
     "@types/node": "^14.0.27",
     "@types/rfdc": "^1.1.0",
     "@types/voca": "^1.4.0",
@@ -28,12 +27,13 @@
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-plugin-adonis": "^1.0.14",
     "eslint-plugin-import": "^2.22.0",
-    "jest": "^26.2.1",
-    "ts-jest": "^26.1.4",
+    "japa": "^3.1.1",
+    "nodemon": "^2.0.4",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
   },
   "dependencies": {
+    "lodash": "^4.17.20",
     "rfdc": "^1.1.4",
     "voca": "^1.4.0"
   }

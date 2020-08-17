@@ -2,5 +2,6 @@
     "cSpell.words": [
         "rfdc",
         "stroustrup"
-    ]
+    ],
+    "eslint.codeActionsOnSave.mode": "all"
 }
