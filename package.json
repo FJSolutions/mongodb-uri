@@ -1,6 +1,6 @@
 {
   "name": "@fjsolutions/mongodb-uri",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "A TypeScript module for creating, loading, and validating URI configuration information and then generating MongoDB URI connection strings.",
   "main": "dist/index.js",
   "scripts": {
