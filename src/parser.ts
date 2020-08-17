@@ -87,26 +87,32 @@ const parseDbAndOptions = (connectionString: string) : { database: string | unde
             options.encryption.tls = Utils.parseBoolean(kvp[1])
             break
           case 'tlsinsecure':
+          case 'sslinsecure':
             if(!options.encryption) options.encryption = {}
             options.encryption.tlsInsecure = Utils.parseBoolean(kvp[1])
             break
           case 'tlsallowinvalidcertificates':
+          case 'sslallowinvalidcertificates':
             if(!options.encryption) options.encryption = {}
             options.encryption.tlsAllowInvalidCertificates = Utils.parseBoolean(kvp[1])
             break
           case 'tlsallowinvalidhostnames':
+          case 'sslallowinvalidhostnames':
             if(!options.encryption) options.encryption = {}
             options.encryption.tlsAllowInvalidHostnames = Utils.parseBoolean(kvp[1])
             break
           case 'tlscafile':
+          case 'sslcafile':
             if(!options.encryption) options.encryption = {}
             options.encryption.tlsCAFile = decodeURIComponent(kvp[1])
             break
           case 'tlscertificatekeyfile':
+          case 'sslcertificatekeyfile':
             if(!options.encryption) options.encryption = {}
             options.encryption.tlsCertificateKeyFile = decodeURIComponent(kvp[1])
             break
           case 'tlscertificatekeyfilepassword':
+          case 'sslcertificatekeyfilepassword':
             if(!options.encryption) options.encryption = {}
             options.encryption.tlsCertificateKeyFilePassword = decodeURIComponent(kvp[1])
             break

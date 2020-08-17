@@ -128,31 +128,37 @@ function normalizeUri(configObj) {
                     options.encryption.tls = e[1];
                     break;
                 case 'tlsinsecure':
+                case 'sslinsecure':
                     if (!options.encryption)
                         options.encryption = {};
                     options.encryption.tlsInsecure = e[1];
                     break;
                 case 'tlsallowinvalidcertificates':
+                case 'sslallowinvalidcertificates':
                     if (!options.encryption)
                         options.encryption = {};
                     options.encryption.tlsAllowInvalidCertificates = e[1];
                     break;
                 case 'tlsallowinvalidhostnames':
+                case 'sslallowinvalidhostnames':
                     if (!options.encryption)
                         options.encryption = {};
                     options.encryption.tlsAllowInvalidHostnames = e[1];
                     break;
                 case 'tlscafile':
+                case 'sslcafile':
                     if (!options.encryption)
                         options.encryption = {};
                     options.encryption.tlsCAFile = e[1];
                     break;
                 case 'tlscertificatekeyfile':
+                case 'sslcertificatekeyfile':
                     if (!options.encryption)
                         options.encryption = {};
                     options.encryption.tlsCertificateKeyFile = e[1];
                     break;
                 case 'tlscertificatekeyfilepassword':
+                case 'sslcertificatekeyfilepassword':
                     if (!options.encryption)
                         options.encryption = {};
                     options.encryption.tlsCertificateKeyFilePassword = e[1];
