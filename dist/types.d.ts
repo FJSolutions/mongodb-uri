@@ -46,6 +46,13 @@ export interface UriOptionsContract {
         tlsAllowInvalidCertificates?: boolean;
         tlsAllowInvalidHostnames?: boolean;
         tlsInsecure?: boolean;
+        ssl?: boolean;
+        sslCertificateKeyFile?: string;
+        sslCertificateKeyFilePassword?: string;
+        sslCAFile?: string;
+        sslAllowInvalidCertificates?: boolean;
+        sslAllowInvalidHostnames?: boolean;
+        sslInsecure?: boolean;
     };
     compression?: {
         compressors?: 'snappy' | 'zlib' | 'zstd';
