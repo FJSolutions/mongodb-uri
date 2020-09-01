@@ -72,12 +72,12 @@ export interface UriOptionsContract {
   /**
    * Define the database to authenticate against.
    * 
-   * Specify the database name associated with the user’s credentials. If authSource is unspecified, authSource defaults to the defaultauthdb 
-   * specified in the connection string. If defaultauthdb is unspecified, then authSource defaults to admin.
+   * Specify the database name associated with the user’s credentials. If authSource is unspecified, authSource defaults to the `defaultauthdb`
+   * specified in the connection string. If `defaultauthdb` is unspecified, then authSource defaults to admin.
    */
   authSource?: string,
   /**
-   * Specifies the name of the replica set, if the mongod is a member of a replica set.
+   * Specifies the name of the replica set, if the `mongod` is a member of a replica set.
    */
   replicaSet?: string,
   /**
@@ -137,7 +137,7 @@ export interface UriOptionsContract {
    */
   encryption?: {
     /**
-     * Enables or disables TLS/SSL for the connection
+     * Enables or disables ssl/SSL for the connection
      * (The tls option is equivalent to the ssl option)
      */
     tls?: boolean,
@@ -167,9 +167,43 @@ export interface UriOptionsContract {
     tlsAllowInvalidHostnames?: boolean,
     /**
      * Disables various certificate validations.
-     * Set to true to disable certificate validations. The exact validatations disabled vary by drivers. Refer to the drivers documentation.
+     * Set to true to disable certificate validations. The exact validations disabled vary by drivers. Refer to the drivers documentation.
      */
     tlsInsecure?: boolean,
+    /**
+     * Enables or disables TLS/SSL for the connection
+     * (The ssl option is equivalent to the ssl option)
+     */
+    ssl?: boolean,
+    /**
+     * Specifies the location of a local .pem file that contains either the client’s ssl/SSL X.509 certificate 
+     * or the client’s TLS/SSL certificate and key.
+     */
+    sslCertificateKeyFile?: string,
+    /**
+     * Specifies the password to de-crypt the sslCertificateKeyFile.
+     */
+    sslCertificateKeyFilePassword?: string,
+    /**
+     * Specifies the location of a local .pem file that contains the root certificate chain from the Certificate Authority. 
+     * This file is used to validate the certificate presented by the mongod/mongos instance.
+     */
+    sslCAFile?: string,
+    /**
+     * Bypasses validation of the certificates presented by the mongod/mongos instance.
+     * Set to true to connect to MongoDB instances even if the server’s present invalid certificates.
+     */
+    sslAllowInvalidCertificates?: boolean,
+    /**
+     * Disables hostname validation of the certificate presented by the mongod/mongos instance.
+     * Set to true to connect to MongoDB instances even if the hostname in the server certificates do not match the server’s host.
+     */
+    sslAllowInvalidHostnames?: boolean,
+    /**
+     * Disables various certificate validations.
+     * Set to true to disable certificate validations. The exact validations disabled vary by drivers. Refer to the drivers documentation.
+     */
+    sslInsecure?: boolean,
   },
   /**
    * An object containing compression related options
@@ -217,7 +251,7 @@ export interface UriOptionsContract {
      */
     journal?: boolean,
     /**
-     * Enable retryable writes.
+     * Enable retry-able writes.
      */
     retryWrites?: boolean
   },
@@ -234,7 +268,7 @@ export interface UriOptionsContract {
      */
     readPreference?: 'primary' | 'primaryPreferred' | 'secondary' | 'secondaryPreferred' | 'nearest',
     /**
-     * Enables retryable reads.
+     * Enables retry-able reads.
      */
     retryReads?: boolean
   },
