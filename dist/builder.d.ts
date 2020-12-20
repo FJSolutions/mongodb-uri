@@ -1,4 +1,4 @@
-import * as Types from './types';
+import * as Types from "./types";
 export declare const defaultConfig: Types.UriConfigContract;
 export declare class UriBuilder {
     private constructor();
@@ -13,6 +13,8 @@ export declare class UriBuilder {
     static setCredentials(userName: string, password: string, authSource?: string): typeof UriBuilder;
     static setHost(host: string): typeof UriBuilder;
     static setHost(host: Types.HostAddress): typeof UriBuilder;
+    static setProtocol(protocol: Types.MongoDbProtocol): typeof UriBuilder;
+    static setDatabase(dbName: string): typeof UriBuilder;
     static setReplicaSet(replicaSet: Array<string | Types.HostAddress>, name?: string): typeof UriBuilder;
     private static addHost;
     static exportConfig(): Types.UriConfigContract;

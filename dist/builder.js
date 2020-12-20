@@ -28,7 +28,7 @@ const Types = __importStar(require("./types"));
 const Utils = __importStar(require("./utils"));
 const validation_1 = __importDefault(require("./validation"));
 exports.defaultConfig = {
-    name: 'Default',
+    name: "Default",
     host: {
         name: Types.MONGO_DB_HOST,
         port: Types.MONGO_DB_PORT,
@@ -55,7 +55,10 @@ class UriBuilder {
         return hostString;
     }
     static setBuilderOptions(options) {
-        this._options = { ...this._clone(defaultBuildOptions), ...this._clone(options) };
+        this._options = {
+            ...this._clone(defaultBuildOptions),
+            ...this._clone(options),
+        };
         return this;
     }
     static setOptions(options) {
@@ -76,7 +79,7 @@ class UriBuilder {
         return this;
     }
     static setHost(host) {
-        if (typeof host === 'string') {
+        if (typeof host === "string") {
             if (this._config.host) {
                 this._config.host.name = host;
             }
@@ -92,10 +95,18 @@ class UriBuilder {
         }
         return this;
     }
+    static setProtocol(protocol) {
+        this._config.protocol = protocol;
+        return this;
+    }
+    static setDatabase(dbName) {
+        this._config.database = dbName;
+        return this;
+    }
     static setReplicaSet(replicaSet, name) {
         if (replicaSet) {
-            replicaSet.forEach(host => {
-                if (typeof host === 'string') {
+            replicaSet.forEach((host) => {
+                if (typeof host === "string") {
                     this.addHost(host);
                 }
                 else {
@@ -113,7 +124,7 @@ class UriBuilder {
         if (removeDefaultHost) {
             this._config.host = undefined;
         }
-        if (typeof host === 'string') {
+        if (typeof host === "string") {
             (_a = this._config.replicaSet) === null || _a === void 0 ? void 0 : _a.push({ name: host, port: Types.MONGO_DB_PORT });
         }
         else {
@@ -128,13 +139,13 @@ class UriBuilder {
         var _a;
         let uriString = `${this._config.protocol}://`;
         if (Utils.hasUserNameOrPassword(this._config)) {
-            uriString += `${encodeURIComponent(this._config.username || '')}:${encodeURIComponent(this._config.password || '')}@`;
+            uriString += `${encodeURIComponent(this._config.username || "")}:${encodeURIComponent(this._config.password || "")}@`;
         }
         if (this._config.host && Utils.isNullOrEmpty(this._config.replicaSet)) {
             uriString += this.buildHostUri(this._config.host, this._options.alwaysShowPort);
         }
         if (!Utils.isNullOrEmpty(this._config.replicaSet)) {
-            uriString += (_a = this._config.replicaSet) === null || _a === void 0 ? void 0 : _a.map(host => this.buildHostUri(host, this._options.alwaysShowPort)).join(';');
+            uriString += (_a = this._config.replicaSet) === null || _a === void 0 ? void 0 : _a.map((host) => this.buildHostUri(host, this._options.alwaysShowPort)).join(";");
         }
         if (!Utils.isNullOrEmpty(this._config.database)) {
             uriString += `/${this._config.database}`;
@@ -142,11 +153,11 @@ class UriBuilder {
         if (this._config.options) {
             const entries = Object.entries(this._config.options);
             if (entries.length > 0) {
-                uriString += Utils.isNullOrEmpty(this._config.database) ? '/?' : '?';
-                entries.forEach(e => {
+                uriString += Utils.isNullOrEmpty(this._config.database) ? "/?" : "?";
+                entries.forEach((e) => {
                     const value = e[1];
-                    if (typeof value === 'object') {
-                        Object.entries(value).forEach(sv => {
+                    if (typeof value === "object") {
+                        Object.entries(value).forEach((sv) => {
                             uriString += `${sv[0]}=${sv[1]}&`;
                         });
                     }
@@ -161,9 +172,9 @@ class UriBuilder {
     }
     static toJSON() {
         return JSON.stringify(this._config, (k, v) => {
-            if (JSON.stringify(v) === '{}')
+            if (JSON.stringify(v) === "{}")
                 return undefined;
-            else if (Array.isArray(v) && v.every(o => JSON.stringify(o) === '{}'))
+            else if (Array.isArray(v) && v.every((o) => JSON.stringify(o) === "{}"))
                 return undefined;
             else
                 return v;
