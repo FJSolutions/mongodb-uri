@@ -10,6 +10,7 @@ import Clone from "rfdc";
 import * as Types from "./types";
 import * as Utils from "./utils";
 import ConfigValidator from "./validation";
+import { parseUri } from "./parser";
 
 /**
  * The default configuration options for a connection URI
@@ -60,6 +61,17 @@ export class UriBuilder {
 
     this._config.options = {};
     this._config.replicaSet = [];
+
+    return this;
+  }
+
+  /**
+   * Creates the base structure of the URI from an existing URI
+   *
+   * @param uri The URI to parse to setup this builder
+   */
+  public static fromUri(uri: string) {
+    this.setConfig(parseUri(uri));
 
     return this;
   }

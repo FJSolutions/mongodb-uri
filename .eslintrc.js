@@ -22,6 +22,6 @@ module.exports = {
     'max-len': 'off',
     'no-non-null-assertion': 'off',
     'no-explicit-any': 'off',
-    'no-var-requires': 'off'
+    'no-var-requires': 'off',
   },
 };
