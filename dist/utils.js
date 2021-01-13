@@ -1,29 +1,13 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.parseBoolean = exports.hasUserNameOrPassword = exports.parsePrimitive = exports.isNullZeroOrNegative = exports.isNullOrUndefined = exports.isNullOrEmpty = void 0;
-const V = __importStar(require("voca"));
+const voca_1 = __importDefault(require("voca"));
 exports.isNullOrEmpty = (value) => {
     if (value) {
-        if (typeof value === 'string') {
+        if (typeof value === "string") {
             if (value.trim().length > 0) {
                 return false;
             }
@@ -37,7 +21,7 @@ exports.isNullOrEmpty = (value) => {
     return true;
 };
 exports.isNullOrUndefined = (value) => {
-    if (typeof value === 'undefined') {
+    if (typeof value === "undefined") {
         return true;
     }
     else if (value === null) {
@@ -59,12 +43,12 @@ exports.isNullZeroOrNegative = (value) => {
 };
 exports.parsePrimitive = (value) => {
     if (exports.isNullOrEmpty(value)) {
-        return '';
+        return "";
     }
     const bool = exports.parseBoolean(value);
     if (bool)
         return bool;
-    if (V.isNumeric(value)) {
+    if (voca_1.default.isNumeric(value)) {
         return parseFloat(value);
     }
     return decodeURIComponent(value);
@@ -76,9 +60,9 @@ exports.parseBoolean = (value) => {
     if (!value)
         return undefined;
     switch (value.toLocaleLowerCase()) {
-        case 'true':
+        case "true":
             return true;
-        case 'false':
+        case "false":
             return false;
         default:
             return undefined;

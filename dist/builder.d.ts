@@ -6,6 +6,7 @@ export declare class UriBuilder {
     private static _options;
     private static _config;
     static reset(): typeof UriBuilder;
+    static fromUri(uri: string): typeof UriBuilder;
     private static buildHostUri;
     static setBuilderOptions(options: Types.BuilderOptionsContract): typeof UriBuilder;
     static setOptions(options: Types.UriOptionsContract): typeof UriBuilder;

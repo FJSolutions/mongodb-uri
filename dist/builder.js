@@ -27,6 +27,7 @@ const rfdc_1 = __importDefault(require("rfdc"));
 const Types = __importStar(require("./types"));
 const Utils = __importStar(require("./utils"));
 const validation_1 = __importDefault(require("./validation"));
+const parser_1 = require("./parser");
 exports.defaultConfig = {
     name: "Default",
     host: {
@@ -45,6 +46,10 @@ class UriBuilder {
         this._config = this._clone(exports.defaultConfig);
         this._config.options = {};
         this._config.replicaSet = [];
+        return this;
+    }
+    static fromUri(uri) {
+        this.setConfig(parser_1.parseUri(uri));
         return this;
     }
     static buildHostUri(host, showPort = true) {

@@ -1,4 +1,4 @@
-import * as Types from './types';
+import * as Types from "./types";
 export declare const isNullOrEmpty: (value: any | string | null | undefined) => boolean;
 export declare const isNullOrUndefined: (value: any | null | undefined) => boolean;
 export declare const isNullZeroOrNegative: (value: number | null | undefined) => boolean;
